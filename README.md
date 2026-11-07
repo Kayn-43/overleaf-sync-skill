@@ -28,6 +28,13 @@ python -m venv ~/.venvs/ols
 
 Windows 把 `bin/python` 换成 `Scripts/python.exe`，命令是 `ols.exe`。
 
+有 `uv` 的话用它建 venv 更好：能选一个**非 conda** 的 Python，直接绕开下面的陷阱。
+
+```bash
+uv venv ~/.venvs/ols --python 3.12
+uv pip install --python ~/.venvs/ols/Scripts/python.exe "overleaf-sync[gui]"
+```
+
 > **已知陷阱**：venv 如果基于 Anaconda 的 Python，图形登录窗会报
 > `DLL load failed while importing QtCore`。清理 PATH 无效，改用 `ols login --cookie`。
 
@@ -47,6 +54,7 @@ Windows 对应 `C:\Users\<you>\.claude\skills\overleaf-sync\SKILL.md`。
 ## 最小用法
 
 ```bash
+cd <同步目录>                                    # 同步根是「当前目录」，不是 -n
 ols login --cookie --auth-file ./.olauth        # 粘贴浏览器里的 overleaf_session2
 ols list --auth-file ./.olauth                  # 找到项目全名
 ols -r -n "<项目全名>" --auth-file ./.olauth    # 首次：拉下来
@@ -55,11 +63,15 @@ ols -l -n "<项目全名>" --auth-file ./.olauth    # 推回 Overleaf
 ols download -n "<项目全名>" --auth-file ./.olauth --download-path ./out   # 云端编译验证
 ```
 
-## 三条必须记住的规则
+不在同步目录里时用 `-p <同步目录>` 代替 `cd`。自建 Overleaf 在登录时加
+`--server https://你的域名`，之后所有命令都会记住。查不出原因就加 `-v`。
+
+## 四条必须记住的规则
 
 1. `.olauth` 是账号会话凭据，别提交、别分享。作废：Overleaf → Account Settings → Clear sessions。
 2. 同步目录里的所有非隐藏文件都会上传。脚本、笔记、日志放目录外面，或者写进 `.olignore`。
-3. 项目按**名称**匹配，首次同步先 `-r`，别让空目录和远端互相覆盖。
+3. 项目按**名称**匹配，首次同步先 `-r`。
+4. 同步根由**当前目录**决定；不在同步目录里时必须显式 `-p`，否则会把当前目录整个传上去。
 
 ## 边界
 
