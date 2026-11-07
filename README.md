@@ -72,6 +72,25 @@ ols download -n "<项目全名>" --auth-file ./.olauth --download-path ./out   #
 2. 同步目录里的所有非隐藏文件都会上传。脚本、笔记、日志放目录外面，或者写进 `.olignore`。
 3. 项目按**名称**匹配，首次同步先 `-r`。
 4. 同步根由**当前目录**决定；不在同步目录里时必须显式 `-p`，否则会把当前目录整个传上去。
+5. 长命令要有时间上限和输出上限。`ols download`、批量同步都可能跑很久，
+   命令本身不带超时——详见 [06-long-running-commands.md](06-long-running-commands.md)。
+
+## 长命令
+
+`ols download` 要在 Overleaf 云端编译，大项目会慢；批量同步同理。这些命令**没有自带上限**，
+跑起来就一直跑。一次真实事故里，一个没有终止条件的管道任务在前台超时后被自动转后台，
+停止工具报成功但子进程继续写，75 分钟后写掉了约 98 GiB。
+
+建议的形状：
+
+```bash
+timeout -k 5 300 ols download -n "$NAME" --auth-file "$AUTH" --download-path ./out
+```
+
+退出码 124 表示超时被杀。被强制终止之后，先 `ols list` 核对项目、再 `-r` 回一次远端基线，
+不要直接接着改——中途被杀可能留下写了一半的文件。
+
+完整的三条规则和 Claude Code 的相关行为见 [06-long-running-commands.md](06-long-running-commands.md)。
 
 ## 边界
 

@@ -143,6 +143,20 @@ $OLS download -n "$NAME" --auth-file $AUTH --download-path <OUT_DIR>   # 云端�
 
 ## 四、安全纪律
 
+### 长命令先加时限
+
+`ols download`（云端编译）、大批量 `ols -l` / `-r` 都可能跑很久，命令本身**没有超时**。
+一次真实事故里，一个没有终止条件的管道任务在前台超时后被自动转后台，停止工具报成功
+但子进程继续写，75 分钟后写掉约 98 GiB。给长命令套上时间与输出上限：
+
+```bash
+timeout -k 5 300 ols download -n "$NAME" --auth-file "$AUTH" --download-path ./out
+```
+
+退出码 124 = 超时被杀。被强制终止后不要直接继续同步——先 `ols list` 核对项目，
+再 `-r` 回一次远端基线，因为中途被杀可能留下写了一半的文件。
+细则见仓库里的 `06-long-running-commands.md`。
+
 | 文件 | 性质 | 处理 |
 |---|---|---|
 | `.olauth` | 会话 cookie = 账号临时访问权 | 不提交、不粘贴、不打印。失效用 Overleaf 账号设置里的 Clear sessions |
