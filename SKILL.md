@@ -155,7 +155,7 @@ timeout -k 5 300 ols download -n "$NAME" --auth-file "$AUTH" --download-path ./o
 
 退出码 124 = 超时被杀。被强制终止后不要直接继续同步——先 `ols list` 核对项目，
 再 `-r` 回一次远端基线，因为中途被杀可能留下写了一半的文件。
-细则见仓库里的 `06-long-running-commands.md`。
+细则见仓库里的 `LONG-RUNNING-COMMANDS.md`。
 
 | 文件 | 性质 | 处理 |
 |---|---|---|

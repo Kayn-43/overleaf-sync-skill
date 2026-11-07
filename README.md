@@ -73,7 +73,7 @@ ols download -n "<项目全名>" --auth-file ./.olauth --download-path ./out   #
 3. 项目按**名称**匹配，首次同步先 `-r`。
 4. 同步根由**当前目录**决定；不在同步目录里时必须显式 `-p`，否则会把当前目录整个传上去。
 5. 长命令要有时间上限和输出上限。`ols download`、批量同步都可能跑很久，
-   命令本身不带超时——详见 [06-long-running-commands.md](06-long-running-commands.md)。
+   命令本身不带超时——详见 [LONG-RUNNING-COMMANDS.md](LONG-RUNNING-COMMANDS.md)。
 
 ## 长命令
 
@@ -90,7 +90,7 @@ timeout -k 5 300 ols download -n "$NAME" --auth-file "$AUTH" --download-path ./o
 退出码 124 表示超时被杀。被强制终止之后，先 `ols list` 核对项目、再 `-r` 回一次远端基线，
 不要直接接着改——中途被杀可能留下写了一半的文件。
 
-完整的三条规则和 Claude Code 的相关行为见 [06-long-running-commands.md](06-long-running-commands.md)。
+完整的三条规则和 Claude Code 的相关行为见 [LONG-RUNNING-COMMANDS.md](LONG-RUNNING-COMMANDS.md)。
 
 ## 边界
 
