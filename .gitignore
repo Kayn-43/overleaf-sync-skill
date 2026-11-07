@@ -1,0 +1,14 @@
+# credentials / synced state — never commit
+.olauth
+.olsync-state.json
+
+# python
+__pycache__/
+*.pyc
+.venv*/
+venv/
+
+# local noise
+*.log
+*.aux
+out/
